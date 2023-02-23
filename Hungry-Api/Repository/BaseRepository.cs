@@ -1,6 +1,40 @@
-﻿namespace Hungry_Api.Repository
+﻿using Hungry_Api.DbModels;
+using Hungry_Api.Repository.Interface;
+using Microsoft.EntityFrameworkCore;
+
+namespace Hungry_Api.Repository
 {
-    public class BaseRepository
+    public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
+        protected readonly HungryDbContext _context;
+        protected readonly DbSet<T> _dbSet;
+
+        public BaseRepository(HungryDbContext context)
+        {
+            _context = context;
+            _dbSet = context.Set<T>();
+        }
+
+        public async Task AddAsync(T entity)
+        {
+            await _dbSet.AddAsync(entity);
+        }
+
+        public Task DeleteAsync(T entity)
+        {
+            _dbSet.Remove(entity);
+            return Task.CompletedTask;
+        }
+
+        public async Task<ICollection<T>> GetAllAsync()
+        {
+            return await _dbSet.ToListAsync();
+        }
+
+        public Task UpdateAsync(T entity)
+        {
+            _context.Update(entity);
+            return Task.CompletedTask;
+        }
     }
 }
