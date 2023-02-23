@@ -1,0 +1,24 @@
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Hungry_Api.DbModels
+{
+    public partial class User
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int UserId { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public string Email { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        [Column(TypeName = "text")]
+        public string Followers { get; set; }
+        public ICollection<Like> Categories { get;}=new List<Like>();
+        public ICollection<Recipe> Recipes { get;} = new List<Recipe>();
+        public ICollection<RecipeReview> RecipeReviews { get; }=new List<RecipeReview>();
+
+    } 
+}
