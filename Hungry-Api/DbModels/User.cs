@@ -19,6 +19,7 @@ namespace Hungry_Api.DbModels
         public ICollection<Like> Categories { get;}=new List<Like>();
         public ICollection<Recipe> Recipes { get;} = new List<Recipe>();
         public ICollection<RecipeReview> RecipeReviews { get; }=new List<RecipeReview>();
+        public ICollection<UserRecipe> UserRecipes { get; } = new List<UserRecipe>();
 
     } 
 }

@@ -7,4 +7,5 @@ namespace Hungry_Api.Repository
     {
         public LikeRepository(HungryDbContext context):base(context) { }
     }
+
 }
