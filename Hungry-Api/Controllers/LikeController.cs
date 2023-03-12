@@ -17,18 +17,5 @@ namespace Hungry_Api.Controllers
 
         }
 
-      /*  [HttpGet("GetLikesForARecipe")]
-        public async Task<IActionResult> GetLikesForARecipe(int recipeId)
-        {
-            try
-            {
-                var recipe=_unitOfWork.RecipeRepository.GetRecipeById(recipeId);
-                var numberOfLikes=_unitOfWork.LikeRepository.
-
-            }
-        }*/
-
-
-
     }
 }

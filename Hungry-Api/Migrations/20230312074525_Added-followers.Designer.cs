@@ -3,6 +3,7 @@ using Hungry_Api.DbModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hungry_Api.Migrations
 {
     [DbContext(typeof(HungryDbContext))]
-    partial class HungryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230312074525_Added-followers")]
+    partial class Addedfollowers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -198,31 +201,6 @@ namespace Hungry_Api.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Hungry_Api.DbModels.UserFollower", b =>
-                {
-                    b.Property<int>("UserFollowerId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserFollowerId"));
-
-                    b.Property<int>("CurrentUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FollowerId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserFollowerId");
-
-                    b.HasIndex("CurrentUserId")
-                        .IsUnique();
-
-                    b.HasIndex("FollowerId")
-                        .IsUnique();
-
-                    b.ToTable("UserFollower");
-                });
-
             modelBuilder.Entity("Hungry_Api.DbModels.UserRecipe", b =>
                 {
                     b.Property<int>("UserRecipeId")
@@ -323,25 +301,6 @@ namespace Hungry_Api.Migrations
                     b.Navigation("Recipe");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Hungry_Api.DbModels.UserFollower", b =>
-                {
-                    b.HasOne("Hungry_Api.DbModels.User", "CurrentUser")
-                        .WithOne()
-                        .HasForeignKey("Hungry_Api.DbModels.UserFollower", "CurrentUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Hungry_Api.DbModels.User", "Follower")
-                        .WithOne()
-                        .HasForeignKey("Hungry_Api.DbModels.UserFollower", "FollowerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("CurrentUser");
-
-                    b.Navigation("Follower");
                 });
 
             modelBuilder.Entity("Hungry_Api.DbModels.UserRecipe", b =>

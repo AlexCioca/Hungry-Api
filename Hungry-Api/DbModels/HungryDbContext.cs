@@ -29,6 +29,7 @@ namespace Hungry_Api.DbModels
         public DbSet<Like> Likes { get; set; }
         public DbSet<RecipeCategory> RecipeCategories { get; set; }
         public DbSet<UserRecipe> UserRecipe { get; set; }
+        public DbSet<UserFollower> UserFollower { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -43,7 +44,13 @@ namespace Hungry_Api.DbModels
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-          
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<UserFollower>().HasOne(a => a.CurrentUser)
+                         .WithOne().OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<UserFollower>().HasOne(a => a.Follower)
+                        .WithOne().OnDelete(DeleteBehavior.Restrict);
         }
 
     }

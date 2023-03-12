@@ -14,8 +14,7 @@ namespace Hungry_Api.DbModels
         public string Email { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        [Column(TypeName = "text")]
-        public string Followers { get; set; }
+        
         public ICollection<Like> Categories { get;}=new List<Like>();
         public ICollection<Recipe> Recipes { get;} = new List<Recipe>();
         public ICollection<RecipeReview> RecipeReviews { get; }=new List<RecipeReview>();
