@@ -1,6 +1,8 @@
-﻿namespace Hungry_Api.Repository.Interface
+﻿using Hungry_Api.DbModels;
+
+namespace Hungry_Api.Repository.Interface
 {
-    public interface IRecipeCategoryRepository
+    public interface IRecipeCategoryRepository:IBaseRepository<RecipeCategory>
     {
     }
 }
