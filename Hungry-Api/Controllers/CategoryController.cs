@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Hungry_Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class CategoryController
     {
         private IMapper Mapper { get; }

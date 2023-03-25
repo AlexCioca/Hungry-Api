@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 namespace Hungry_Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class IngredientController:ControllerBase
     {
         private IMapper Mapper { get; }
