@@ -93,6 +93,12 @@ namespace Hungry_Api.Controllers
 
         }
 
+        [HttpGet("TestForAuthorize"),Authorize]
+        public IActionResult Test()
+        {
+            return Ok("teeeest");
+        }
+
           private User Authenticate(UserLogin userLogin)
         {
             
