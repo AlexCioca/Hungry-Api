@@ -9,6 +9,7 @@
         IRecipeCategoryRepository RecipeCategoryRepository { get; }
         IRecipeReviewRepository RecipeReviewRepository { get; }
         IUserRepository UserRepository { get; }
+        IRecipeImageRepository RecipeImageRepository { get; }
         Task CompleteAsync();
     }
 }

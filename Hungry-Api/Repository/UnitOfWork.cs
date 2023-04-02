@@ -28,6 +28,11 @@ namespace Hungry_Api.Repository
 
         private IUserRepository? _userRepository;
         public IUserRepository UserRepository => _userRepository??= new UserRepository(_context);
+        
+        private IRecipeImageRepository? _recipeImageRepository;
+        public IRecipeImageRepository RecipeImageRepository => _recipeImageRepository??=new RecipeImageRepository(_context);
+        private IRecipeStepsRepository? _recipeStepsRepository;
+        public IRecipeStepsRepository RecipeStepsRepository=>_recipeStepsRepository??=new RecipeStepsRepository(_context); 
 
         public UnitOfWork(HungryDbContext context)
         {

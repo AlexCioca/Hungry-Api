@@ -17,16 +17,16 @@ namespace Hungry_Api.Controllers
         {
             this.Mapper = mapper;
             this._unitOfWork = unitOfWork;
-            
+
         }
         [HttpGet("GetAllRecipes")]
         public async Task<IActionResult> GetAllRecipe()
         {
             try
             {
-                var recipes = _unitOfWork.RecipeRepository.GetAllAsync(); 
+                var recipes = _unitOfWork.RecipeRepository.GetAllAsync();
 
-                if(recipes.Result.IsNullOrEmpty())
+                if (recipes.Result.IsNullOrEmpty())
                 {
                     return NotFound("Recipes not found");
                 }
@@ -39,7 +39,69 @@ namespace Hungry_Api.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            
+
+        }
+
+        [HttpGet("GetRecipeById/{id}")]
+        public async Task<IActionResult> GetRecipeById(int id)
+        {
+            try
+            {
+                var recipe = await _unitOfWork.RecipeRepository.GetRecipeById(id);
+                if (recipe == null)
+                {
+                    return NotFound();
+                }
+                var mappedRecipe = Mapper.Map<Recipe, RecipeDTO>(recipe);
+                return Ok(mappedRecipe);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpGet("GetImagesForRecipe")]
+        public async Task<IActionResult> GetImagesForRecipe(int id)
+        {
+            try
+            {
+                ;
+                var images = await _unitOfWork.RecipeImageRepository.GetImagesForARecepie(id);
+                if(images==null)
+                {
+                    return NotFound();
+                }
+
+                var mappedImages = Mapper.Map<ICollection<RecipeImage>, ICollection<RecipeImageDTO>>(images);
+                return Ok(mappedImages);
+
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpPost("AddPhotoForRecipe")]
+        public async Task<IActionResult> AddPhotoForRecipe([FromBody]RecipeImageDTO image)
+        {
+            try
+            {
+                var mappedImage = Mapper.Map<RecipeImageDTO, RecipeImage>(image);
+                await _unitOfWork.RecipeImageRepository.AddAsync(mappedImage);
+                await _unitOfWork.CompleteAsync();
+                return Ok(mappedImage);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
 
         [HttpPost("AddRecipe")]
@@ -74,6 +136,46 @@ namespace Hungry_Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+
+
+        [HttpPut("UpdatePhotoForRecipe")]
+        public async Task<IActionResult> UpdatePhotoForRecipe(RecipeImageDTO image)
+        {
+            try
+            {
+                var mappedImage = Mapper.Map<RecipeImageDTO, RecipeImage>(image);
+                await _unitOfWork.RecipeImageRepository.UpdateAsync(mappedImage);
+                await _unitOfWork.CompleteAsync();
+                return Ok(mappedImage);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpPut("DeletePhotoForRecipe")]
+        public async Task<IActionResult> DeletePhotoForRecipe(RecipeImageDTO image)
+        {
+            try
+            {
+                var mappedImage = Mapper.Map<RecipeImageDTO, RecipeImage>(image);
+                await _unitOfWork.RecipeImageRepository.DeleteAsync(mappedImage);
+                await _unitOfWork.CompleteAsync();
+                return Ok(mappedImage);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+
 
         [HttpDelete("DeleteRecipe")]
         public async Task<IActionResult> DeleteRecipe(int id)

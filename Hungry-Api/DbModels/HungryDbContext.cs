@@ -27,9 +27,11 @@ namespace Hungry_Api.DbModels
         public DbSet<RecipeReview> RecipeReviews { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Like> Likes { get; set; }
+        public DbSet<RecipeImage> RecipeImages { get; set; }
         public DbSet<RecipeCategory> RecipeCategories { get; set; }
         public DbSet<UserRecipe> UserRecipe { get; set; }
         public DbSet<UserFollower> UserFollower { get; set; }
+        public DbSet<RecipeSteps> RecipeSteps { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

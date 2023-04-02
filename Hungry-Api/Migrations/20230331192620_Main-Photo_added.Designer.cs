@@ -4,6 +4,7 @@ using Hungry_Api.DbModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hungry_Api.Migrations
 {
     [DbContext(typeof(HungryDbContext))]
-    partial class HungryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230331192620_Main-Photo_added")]
+    partial class MainPhoto_added
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,6 +49,9 @@ namespace Hungry_Api.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IngredientsId"));
+
+                    b.Property<int?>("Calories")
+                        .HasColumnType("int");
 
                     b.Property<string>("IngredientsName")
                         .IsRequired()
@@ -95,14 +101,7 @@ namespace Hungry_Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RecipeId"));
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Difficulty")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -112,12 +111,6 @@ namespace Hungry_Api.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("PreparationTime")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Serves")
-                        .HasColumnType("int");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -152,28 +145,6 @@ namespace Hungry_Api.Migrations
                     b.ToTable("RecipeCategories");
                 });
 
-            modelBuilder.Entity("Hungry_Api.DbModels.RecipeImage", b =>
-                {
-                    b.Property<int>("RecipeImageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RecipeImageId"));
-
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RecipeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("RecipeImageId");
-
-                    b.HasIndex("RecipeId");
-
-                    b.ToTable("RecipeImages");
-                });
-
             modelBuilder.Entity("Hungry_Api.DbModels.RecipeReview", b =>
                 {
                     b.Property<int>("RecipeReviewId")
@@ -202,28 +173,6 @@ namespace Hungry_Api.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("RecipeReviews");
-                });
-
-            modelBuilder.Entity("Hungry_Api.DbModels.RecipeSteps", b =>
-                {
-                    b.Property<int>("RecipeStepsId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RecipeStepsId"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RecipeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("RecipeStepsId");
-
-                    b.HasIndex("RecipeId");
-
-                    b.ToTable("RecipeSteps");
                 });
 
             modelBuilder.Entity("Hungry_Api.DbModels.User", b =>
@@ -377,17 +326,6 @@ namespace Hungry_Api.Migrations
                     b.Navigation("Recipe");
                 });
 
-            modelBuilder.Entity("Hungry_Api.DbModels.RecipeImage", b =>
-                {
-                    b.HasOne("Hungry_Api.DbModels.Recipe", "Recipe")
-                        .WithMany("RecipeImages")
-                        .HasForeignKey("RecipeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Recipe");
-                });
-
             modelBuilder.Entity("Hungry_Api.DbModels.RecipeReview", b =>
                 {
                     b.HasOne("Hungry_Api.DbModels.Recipe", "Recipe")
@@ -405,17 +343,6 @@ namespace Hungry_Api.Migrations
                     b.Navigation("Recipe");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Hungry_Api.DbModels.RecipeSteps", b =>
-                {
-                    b.HasOne("Hungry_Api.DbModels.Recipe", "Recipe")
-                        .WithMany("RecipeSteps")
-                        .HasForeignKey("RecipeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Recipe");
                 });
 
             modelBuilder.Entity("Hungry_Api.DbModels.UserFollower", b =>
@@ -469,11 +396,7 @@ namespace Hungry_Api.Migrations
 
                     b.Navigation("Ingredients");
 
-                    b.Navigation("RecipeImages");
-
                     b.Navigation("RecipeReviews");
-
-                    b.Navigation("RecipeSteps");
 
                     b.Navigation("UserRecipes");
                 });

@@ -6,7 +6,6 @@ namespace Hungry_Api.DTO
     {
         public int IngredientsId { get; set; }
         public string IngredientsName { get; set; }
-        public int Calories { get; set; }
         public int RecipeId { get; set; }
     }
 }

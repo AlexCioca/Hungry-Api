@@ -10,7 +10,7 @@ namespace Hungry_Api.Repository
 
         public async Task<User> GetUserById(int id)
         {
-            var user = await _dbSet.SingleAsync(u=>u.UserId== id);
+            var user = await _dbSet.FirstOrDefaultAsync(u=>u.UserId== id);
             return user;
         }
     }
