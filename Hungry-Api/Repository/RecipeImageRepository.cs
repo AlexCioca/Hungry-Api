@@ -11,6 +11,11 @@ namespace Hungry_Api.Repository
         {
         }
 
+        public Task<RecipeImage> GetImageById(int id)
+        {
+            var image = _dbSet.SingleAsync(r => r.RecipeImageId == id);
+            return image;
+        }
         public async Task<ICollection<RecipeImage>> GetImagesForARecepie(int id)
         {
             var images = _dbSet.Where(x => x.RecipeId == id).ToListAsync();

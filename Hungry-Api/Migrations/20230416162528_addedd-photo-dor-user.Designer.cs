@@ -4,6 +4,7 @@ using Hungry_Api.DbModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hungry_Api.Migrations
 {
     [DbContext(typeof(HungryDbContext))]
-    partial class HungryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230416162528_addedd-photo-dor-user")]
+    partial class addeddphotodoruser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,10 +51,6 @@ namespace Hungry_Api.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IngredientsId"));
 
                     b.Property<string>("IngredientsName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Measurement")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -244,7 +243,7 @@ namespace Hungry_Api.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -258,6 +257,7 @@ namespace Hungry_Api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Photo")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
@@ -270,15 +270,9 @@ namespace Hungry_Api.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.HasIndex("Username")
-                        .IsUnique();
 
                     b.ToTable("Users");
                 });
@@ -291,17 +285,19 @@ namespace Hungry_Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserFollowerId"));
 
-                    b.Property<int?>("CurrentUserId")
+                    b.Property<int>("CurrentUserId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("FollowerId")
+                    b.Property<int>("FollowerId")
                         .HasColumnType("int");
 
                     b.HasKey("UserFollowerId");
 
-                    b.HasIndex("CurrentUserId");
+                    b.HasIndex("CurrentUserId")
+                        .IsUnique();
 
-                    b.HasIndex("FollowerId");
+                    b.HasIndex("FollowerId")
+                        .IsUnique();
 
                     b.ToTable("UserFollower");
                 });
@@ -435,12 +431,14 @@ namespace Hungry_Api.Migrations
                     b.HasOne("Hungry_Api.DbModels.User", "CurrentUser")
                         .WithOne()
                         .HasForeignKey("Hungry_Api.DbModels.UserFollower", "CurrentUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Hungry_Api.DbModels.User", "Follower")
                         .WithOne()
                         .HasForeignKey("Hungry_Api.DbModels.UserFollower", "FollowerId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("CurrentUser");
 

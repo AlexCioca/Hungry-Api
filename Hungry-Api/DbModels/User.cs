@@ -17,6 +17,7 @@ namespace Hungry_Api.DbModels
         public string LastName { get; set; }
         public string Role { get; set; }
         public string Token { get; set; }
+        public string? Photo { get; set; }
         
         public ICollection<Like> Categories { get;}=new List<Like>();
         public ICollection<Recipe> Recipes { get;} = new List<Recipe>();

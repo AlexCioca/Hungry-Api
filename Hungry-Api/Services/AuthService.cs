@@ -1,9 +1,10 @@
-﻿using Hungry_Api.AuthFolder;
+﻿using Azure.Core;
 using Hungry_Api.DbModels;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.Net.Http.Headers;
 
 namespace Hungry_Api.Services
 {
@@ -21,6 +22,7 @@ namespace Hungry_Api.Services
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier,user.Username),
+                new Claim(ClaimTypes.Sid,user.UserId.ToString()),
                 new Claim(ClaimTypes.Email,user.Email),
                 new Claim(ClaimTypes.Role,user.Role)
             };
@@ -34,5 +36,6 @@ namespace Hungry_Api.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
 
         }
+
     }
 }

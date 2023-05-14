@@ -53,6 +53,16 @@ namespace Hungry_Api.DbModels
 
             modelBuilder.Entity<UserFollower>().HasOne(a => a.Follower)
                         .WithOne().OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<UserFollower>().HasIndex(a => a.CurrentUserId)
+                .IsUnique(false);
+            modelBuilder.Entity<UserFollower>().HasIndex(a => a.FollowerId)
+                .IsUnique(false);
+            modelBuilder.Entity<User>()
+                .HasIndex(u=>u.Username)
+                .IsUnique();
+            modelBuilder.Entity<User>()
+               .HasIndex(u => u.Email)
+               .IsUnique();
         }
 
     }

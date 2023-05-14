@@ -93,16 +93,10 @@ namespace Hungry_Api.Controllers
 
         }
 
-        [HttpGet("TestForAuthorize"),Authorize]
-        public IActionResult Test()
-        {
-            return Ok("teeeest");
-        }
-
           private User Authenticate(UserLogin userLogin)
         {
             
-            var currentUser =  _unitOfWork.UserRepository.GetAllAsync().Result.FirstOrDefault(x => x.AccountId == userLogin.AccountId);
+            var currentUser =  _unitOfWork.UserRepository.GetAllAsync().Result.FirstOrDefault(x => x.Email == userLogin.Email);
 
 
             if (currentUser != null)

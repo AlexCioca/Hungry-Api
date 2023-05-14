@@ -4,6 +4,7 @@ using Hungry_Api.DbModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hungry_Api.Migrations
 {
     [DbContext(typeof(HungryDbContext))]
-    partial class HungryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230417180917_make-userfollowers-columns-not-unique")]
+    partial class makeuserfollowerscolumnsnotunique
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,10 +51,6 @@ namespace Hungry_Api.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IngredientsId"));
 
                     b.Property<string>("IngredientsName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Measurement")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -299,9 +298,13 @@ namespace Hungry_Api.Migrations
 
                     b.HasKey("UserFollowerId");
 
-                    b.HasIndex("CurrentUserId");
+                    b.HasIndex("CurrentUserId")
+                        .IsUnique()
+                        .HasFilter("[CurrentUserId] IS NOT NULL");
 
-                    b.HasIndex("FollowerId");
+                    b.HasIndex("FollowerId")
+                        .IsUnique()
+                        .HasFilter("[FollowerId] IS NOT NULL");
 
                     b.ToTable("UserFollower");
                 });

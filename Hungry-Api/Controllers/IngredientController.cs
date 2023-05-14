@@ -2,6 +2,7 @@
 using Hungry_Api.DbModels;
 using Hungry_Api.DTO;
 using Hungry_Api.Repository.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.InteropServices;
@@ -9,7 +10,7 @@ using System.Runtime.InteropServices;
 namespace Hungry_Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]"), Authorize]
     public class IngredientController:ControllerBase
     {
         private IMapper Mapper { get; }
@@ -21,7 +22,7 @@ namespace Hungry_Api.Controllers
 
         }
 
-        [HttpGet("GetIngredientsForARecipe")]
+        [HttpGet("GetIngredientsForARecipe"), Authorize]
         public async Task<IActionResult> GetIngredientsForARecipe(int recipeId)
         {
             try
@@ -36,6 +37,7 @@ namespace Hungry_Api.Controllers
             }
 
         }
+      
 
     }
 }
