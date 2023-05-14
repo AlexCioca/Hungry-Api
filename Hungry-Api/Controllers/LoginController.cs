@@ -96,7 +96,7 @@ namespace Hungry_Api.Controllers
           private User Authenticate(UserLogin userLogin)
         {
             
-            var currentUser =  _unitOfWork.UserRepository.GetAllAsync().Result.FirstOrDefault(x => x.AccountId == userLogin.AccountId);
+            var currentUser =  _unitOfWork.UserRepository.GetAllAsync().Result.FirstOrDefault(x => x.Email == userLogin.Email);
 
 
             if (currentUser != null)

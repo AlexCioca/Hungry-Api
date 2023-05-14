@@ -27,9 +27,11 @@ namespace Hungry_Api.DbModels
         public DbSet<RecipeReview> RecipeReviews { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Like> Likes { get; set; }
+        public DbSet<RecipeImage> RecipeImages { get; set; }
         public DbSet<RecipeCategory> RecipeCategories { get; set; }
         public DbSet<UserRecipe> UserRecipe { get; set; }
         public DbSet<UserFollower> UserFollower { get; set; }
+        public DbSet<RecipeSteps> RecipeSteps { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -51,6 +53,16 @@ namespace Hungry_Api.DbModels
 
             modelBuilder.Entity<UserFollower>().HasOne(a => a.Follower)
                         .WithOne().OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<UserFollower>().HasIndex(a => a.CurrentUserId)
+                .IsUnique(false);
+            modelBuilder.Entity<UserFollower>().HasIndex(a => a.FollowerId)
+                .IsUnique(false);
+            modelBuilder.Entity<User>()
+                .HasIndex(u=>u.Username)
+                .IsUnique();
+            modelBuilder.Entity<User>()
+               .HasIndex(u => u.Email)
+               .IsUnique();
         }
 
     }

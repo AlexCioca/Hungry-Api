@@ -9,6 +9,10 @@
         IRecipeCategoryRepository RecipeCategoryRepository { get; }
         IRecipeReviewRepository RecipeReviewRepository { get; }
         IUserRepository UserRepository { get; }
+        IRecipeImageRepository RecipeImageRepository { get; }
+        IRecipeStepsRepository RecipeStepsRepository { get; }
+        IUserFollowerRepository UserFollowerRepository { get; }
+        IUserRecipeRepository UserRecipeRepository { get; }
         Task CompleteAsync();
     }
 }

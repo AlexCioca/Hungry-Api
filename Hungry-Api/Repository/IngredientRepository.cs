@@ -14,5 +14,15 @@ namespace Hungry_Api.Repository
             return ingredients;
         }
 
+        public async Task AddIngredientForRecipe(Ingredient ingredient)
+        {
+            await _dbSet.AddAsync(ingredient);
+
+        }
+        public async Task DeleteIngredientForRecipe(Ingredient ingredient)
+        {
+            _dbSet.Remove(ingredient);
+        }
+
     }
 }
