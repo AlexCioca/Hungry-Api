@@ -26,12 +26,9 @@ namespace Hungry_Api.Controllers
         {
             try
             {
-                var user=_unitOfWork.UserRepository.GetUserById(id);
-                if(user == null)
-                {
-                    return NotFound();
-                }
-                var mappedUser = Mapper.Map<User, UserDTO>(user.Result);
+                var user= await _unitOfWork.UserRepository.GetUserById(id);
+              
+                var mappedUser = Mapper.Map<User, UserDTO>(user);
 
                 return Ok(mappedUser);
 
@@ -52,14 +49,14 @@ namespace Hungry_Api.Controllers
 
                 var userId = jsonToken.Claims.First(claim => claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/sid").Value;
 
-                var u = _unitOfWork.UserRepository.GetUserById(int.Parse(userId));
+                var u =  await _unitOfWork.UserRepository.GetUserById(int.Parse(userId));
 
                 if (u == null)
                 {
                     return NotFound();
                 }
 
-                var mappedUser = Mapper.Map<User, UserDTO>(u.Result);
+                var mappedUser = Mapper.Map<User, UserDTO>(u);
                 
                 return Ok(mappedUser);
 
@@ -75,13 +72,13 @@ namespace Hungry_Api.Controllers
         {
             try
             {
-                var user = _unitOfWork.UserRepository.GetUserByUsername(username);
+                var user = await _unitOfWork.UserRepository.GetUserByUsername(username);
                 if (user == null)
                 {
                     return NotFound();
                 }
 
-                var mappedUser = Mapper.Map<User, UserDTO>(user.Result);
+                var mappedUser = Mapper.Map<User, UserDTO>(user);
 
                 return Ok(mappedUser);
 

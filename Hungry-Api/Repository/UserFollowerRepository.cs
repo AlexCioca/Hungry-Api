@@ -1,5 +1,6 @@
 ﻿using Hungry_Api.DbModels;
 using Hungry_Api.Repository.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace Hungry_Api.Repository
 {
@@ -9,9 +10,9 @@ namespace Hungry_Api.Repository
 
         public async Task<ICollection<UserFollower>> GetByFollowerAsync(int id)
         {
-            var users = _dbSet.Where(data => data.FollowerId == id);
+            var users =await _dbSet.Where(data => data.FollowerId == id).ToListAsync();
 
-            return users.ToList();
+            return users;
         }
 
         public async Task DeleteByIdAndFollowerId(int currentUserId, int followerId)
@@ -22,6 +23,22 @@ namespace Hungry_Api.Repository
                 _dbSet.Remove(rel);
             }
         }
-
+        public async Task<int> GetNumberOfFollowersForUser(int userId)
+        {
+            var number = await _dbSet.Where(fol => fol.CurrentUserId==userId).CountAsync();
+            return number;
+        }
+            public async Task<int> GetNumberOfFollowingForUser(int userId)
+        {
+            var number = await _dbSet.Where(fol => fol.FollowerId == userId).CountAsync();
+            return number;
+        }
+            public async Task<bool> IsFollowing(int currentUserId, int userId)
+        {
+            var follow = await _dbSet.FirstOrDefaultAsync(fol => fol.CurrentUserId == currentUserId && fol.FollowerId == userId);
+            if (follow != null)
+                return true;
+            else return false;
+        }
     }
 }

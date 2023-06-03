@@ -1,5 +1,6 @@
 ﻿using Hungry_Api.DbModels;
 using Hungry_Api.Repository.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace Hungry_Api.Repository
 {
@@ -9,7 +10,7 @@ namespace Hungry_Api.Repository
 
         public async Task<Category> GetById(int id)
         {
-            return _dbSet.FirstOrDefault(x => x.CategoryId == id);
+            return await _dbSet.FirstOrDefaultAsync(x => x.CategoryId == id);
         }
     }
 }

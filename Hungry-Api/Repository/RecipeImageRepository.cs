@@ -18,8 +18,8 @@ namespace Hungry_Api.Repository
         }
         public async Task<ICollection<RecipeImage>> GetImagesForARecepie(int id)
         {
-            var images = _dbSet.Where(x => x.RecipeId == id).ToListAsync();
-            return images.Result;
+            var images = await _dbSet.Where(x => x.RecipeId == id).ToListAsync();
+            return images;
         }
     }
 }

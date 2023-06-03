@@ -25,6 +25,55 @@ namespace Hungry_Api.Controllers
             Mapper = mapper;
             _unitOfWork = unitOfWork;
         }
+
+        [HttpGet("GetNumberOfFollowersForUser")]
+        public async Task<IActionResult> GetNumberOfFollowersForUser(int userId)
+        {
+            try
+            {
+                var number = await _unitOfWork.UserFollowerRepository.GetNumberOfFollowersForUser(userId);
+                return Ok(number);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("GetNumberOfFollowingForUser")]
+        public async Task<IActionResult> GetNumberOfFollowingForUser(int userId)
+        {
+            try
+            {
+                var number = await _unitOfWork.UserFollowerRepository.GetNumberOfFollowingForUser(userId);
+                return Ok(number);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("CheckIfUserFollows")]
+        public async Task<IActionResult> CheckIfUserFollows(int userId)
+        {
+            try
+            {
+                var bearer_token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                var handler = new JwtSecurityTokenHandler();
+                var jsonToken = handler.ReadToken(bearer_token) as JwtSecurityToken;
+
+                var currentUserId = jsonToken.Claims.First(claim => claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/sid").Value;
+
+                var follow = await _unitOfWork.UserFollowerRepository.IsFollowing(int.Parse(currentUserId), userId);
+                return Ok(follow);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost("AddFolower")]
         public async Task<IActionResult> AddFolower(int followerId)
         {
@@ -69,5 +118,6 @@ namespace Hungry_Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        
     }
 }

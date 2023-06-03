@@ -27,14 +27,9 @@ namespace Hungry_Api.Controllers
         {
             try
             {
-                var recipes = _unitOfWork.RecipeRepository.GetAllAsync();
+                var recipes = await _unitOfWork.RecipeRepository.GetAllAsync();
 
-                if (recipes.Result.IsNullOrEmpty())
-                {
-                    return NotFound("Recipes not found");
-                }
-
-                var mapped = Mapper.Map<Recipe[], RecipeDTO[]>(recipes.Result.ToArray());
+                var mapped = Mapper.Map<Recipe[], RecipeDTO[]>(recipes.ToArray());
 
                 return Ok(mapped);
             }
@@ -56,10 +51,10 @@ namespace Hungry_Api.Controllers
 
                 var userId = jsonToken.Claims.First(claim => claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/sid").Value;
 
-                var user = _unitOfWork.UserRepository.GetUserById(int.Parse(userId));
-                var recipes = _unitOfWork.RecipeRepository.GetRecipesOnFolloewdScroll(user.Result, number);
+                var user = await _unitOfWork.UserRepository.GetUserById(int.Parse(userId));
+                var recipes = await _unitOfWork.RecipeRepository.GetRecipesOnFolloewdScroll(user, number);
 
-                var mapped = Mapper.Map<Recipe[], RecipeDTO[]>(recipes.Result.ToArray());
+                var mapped = Mapper.Map<Recipe[], RecipeDTO[]>(recipes.ToArray());
 
                 
 
@@ -195,12 +190,7 @@ namespace Hungry_Api.Controllers
         {
             try
             {
-                var recipesNames = _unitOfWork.RecipeRepository.GetAllRecipesNames();
-
-                if (recipesNames.Result.IsNullOrEmpty())
-                {
-                    return NotFound("Recipes not found");
-                }
+                var recipesNames = await _unitOfWork.RecipeRepository.GetAllRecipesNames();
 
                 return Ok(recipesNames);
             }
@@ -235,14 +225,9 @@ namespace Hungry_Api.Controllers
         {
             try
             {
-                var recipes = _unitOfWork.RecipeRepository.GetRecipesForUser(userId);
+                var recipes =await _unitOfWork.RecipeRepository.GetRecipesForUser(userId);
 
-                if (recipes.Result.IsNullOrEmpty())
-                {
-                    return NotFound("Recipes not found");
-                }
-
-                var mapped = Mapper.Map<Recipe[], RecipeDTO[]>(recipes.Result.ToArray());
+                var mapped = Mapper.Map<Recipe[], RecipeDTO[]>(recipes.ToArray());
 
                 return Ok(mapped);
             }
@@ -279,7 +264,7 @@ namespace Hungry_Api.Controllers
         {
             try
             {
-                var recipe = _unitOfWork.RecipeRepository.GetRecipeBasedOnCategory(categoryId, recipeName).Result;
+                var recipe = await _unitOfWork.RecipeRepository.GetRecipeBasedOnCategory(categoryId, recipeName);
 
                 var mappedRecipe = Mapper.Map<ICollection<Recipe>,ICollection<RecipeDTO>>(recipe);
 
@@ -338,12 +323,8 @@ namespace Hungry_Api.Controllers
         {
             try
             {
-                ;
+                
                 var images = await _unitOfWork.RecipeImageRepository.GetImagesForARecepie(id);
-                if(images==null)
-                {
-                    return NotFound();
-                }
 
                 var mappedImages = Mapper.Map<ICollection<RecipeImage>, ICollection<RecipeImageDTO>>(images);
                 return Ok(mappedImages);
@@ -382,6 +363,8 @@ namespace Hungry_Api.Controllers
                 var mapped = Mapper.Map<RecipeDTO, Recipe>(recipe);
                 await _unitOfWork.RecipeRepository.AddAsync(mapped);
                 await _unitOfWork.CompleteAsync();
+             
+
                 return Ok(mapped);
             }
             catch(Exception ex)
@@ -460,6 +443,27 @@ namespace Hungry_Api.Controllers
 
             }
             catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("ChangeMainPhotoForARecipe")]
+        public async Task<IActionResult> ChangeMainPhotoForARecipe([FromBody] RecipeMainPhotoDTO obj)
+        {
+            try
+            {
+               
+                var recipe= await _unitOfWork.RecipeRepository.GetRecipeById(obj.RecipeId);
+                recipe.MainPhoto = obj.Photo;
+
+                await _unitOfWork.RecipeRepository.UpdateAsync(recipe);
+                await _unitOfWork.CompleteAsync();
+
+
+                return Ok();
+            }
+            catch(Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -568,4 +572,6 @@ namespace Hungry_Api.Controllers
         }
 
     }
+
+
 }

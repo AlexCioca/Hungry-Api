@@ -16,7 +16,7 @@ namespace Hungry_Api.Repository
 
         public async Task<double> GetRecipeRating(int recipeId)
         {
-            var ratings = _dbSet.Where(review => review.RecipeId == recipeId).Select(rev => rev.Rating).Average(); 
+            var ratings = await _dbSet.Where(review => review.RecipeId == recipeId).Select(rev => rev.Rating).AverageAsync(); 
             return ratings;
         }
     }

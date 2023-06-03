@@ -7,6 +7,8 @@ namespace Hungry_Api.Repository.Interface
 
         Task<ICollection<UserFollower>> GetByFollowerAsync(int id);
         Task DeleteByIdAndFollowerId(int currentUserId,int followerId);
-
+        Task<int> GetNumberOfFollowersForUser(int userId);
+        Task<int> GetNumberOfFollowingForUser(int userId);
+        Task<bool> IsFollowing(int currentUserId,int userId);
     }
 }

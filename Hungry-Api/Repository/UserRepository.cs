@@ -25,8 +25,8 @@ namespace Hungry_Api.Repository
         }
         public async Task<ICollection<User>> GetPeopleByUsername(string username)
         {
-            var users = _dbSet.Where(user => user.Username.ToUpper().StartsWith(username.ToUpper()));
-            return users.ToList();
+            var users = await _dbSet.Where(user => user.Username.ToUpper().StartsWith(username.ToUpper())).ToListAsync();
+            return users;
         }
 
     }

@@ -7,6 +7,10 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Hungry_Api.Services;
 using Microsoft.OpenApi.Models;
+using Azure.Identity;
+using Azure.Storage.Blobs;
+using Hungry_Api.Services.Interface;
+using Hungry_Api.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,19 +18,28 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
-    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore); ;
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+builder.Services.AddSignalR();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+builder.Services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
+
+    builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowCredentials().AllowAnyMethod()
+));
+
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddDbContext<HungryDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("MyContext")));
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IUploadService, UploadService>();
 builder.Services.AddScoped<AuthService>();
-
 
 
 builder.Services.AddSwaggerGen(option =>
@@ -74,7 +87,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 var app = builder.Build();
 
-app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+app.UseCors("CorsPolicy");
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -89,5 +103,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<ChatHub>("/chatsocket");
 
 app.Run();

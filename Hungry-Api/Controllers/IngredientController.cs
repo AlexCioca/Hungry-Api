@@ -27,8 +27,8 @@ namespace Hungry_Api.Controllers
         {
             try
             {
-                var ingredients=_unitOfWork.IngredientRepository.GetIngredientsForRecipe(recipeId);
-                var mapped = Mapper.Map<Ingredient[], IngredientDTO[]>(ingredients.Result.ToArray());
+                var ingredients=await _unitOfWork.IngredientRepository.GetIngredientsForRecipe(recipeId);
+                var mapped = Mapper.Map<Ingredient[], IngredientDTO[]>(ingredients.ToArray());
                 return Ok(mapped);
             }
             catch(Exception ex)

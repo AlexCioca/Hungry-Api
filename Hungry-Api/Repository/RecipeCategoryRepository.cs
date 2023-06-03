@@ -10,30 +10,30 @@ namespace Hungry_Api.Repository
 
         public async Task<ICollection<RecipeCategory>> GetRecipeBasedOnCategory(int categoryId,int recipeId)
         {
-            var recipeSearch=_dbSet.Where(data=>data.CategoryId== categoryId && data.RecipeId==recipeId).ToList();
+            var recipeSearch= await _dbSet.Where(data=>data.CategoryId== categoryId && data.RecipeId==recipeId).ToListAsync();
          
             return recipeSearch;
 
         }
         public async Task<Category> GetCategoryForRecipe(int recipeId)
         {
-            var category = _dbSet
+            var category =await _dbSet
             .Where(rc => rc.RecipeId == recipeId)
             .Select(rc => rc.Category)
-            .FirstOrDefault();
+            .FirstOrDefaultAsync();
 
             return category;
         }
         public async Task<RecipeCategory> GetSingleRecipeCategory(int categoryId, int recipeId)
         {
-            var recipeCategory = _dbSet.FirstOrDefault(x => x.CategoryId.Equals(categoryId) && x.RecipeId.Equals(recipeId));
+            var recipeCategory =await _dbSet.FirstOrDefaultAsync(x => x.CategoryId.Equals(categoryId) && x.RecipeId.Equals(recipeId));
 
             return recipeCategory;
         }
 
         public async Task<RecipeCategory> GetRecipeCategoryForRecipe(int recipeId)
         {
-            var recipeSearch = _dbSet.FirstOrDefault(data => data.RecipeId==recipeId);
+            var recipeSearch =await _dbSet.FirstOrDefaultAsync(data => data.RecipeId==recipeId);
 
             return recipeSearch;
         }
