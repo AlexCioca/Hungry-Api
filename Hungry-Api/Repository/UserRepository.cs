@@ -28,6 +28,7 @@ namespace Hungry_Api.Repository
             var users = await _dbSet.Where(user => user.Username.ToUpper().StartsWith(username.ToUpper())).ToListAsync();
             return users;
         }
+      
 
     }
 }

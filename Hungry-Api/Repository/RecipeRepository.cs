@@ -13,24 +13,24 @@ namespace Hungry_Api.Repository
 
         public Task<Recipe> GetRecipeById(int id)
         {
-            var recipe = _dbSet.SingleAsync(r => r.RecipeId== id);
+            var recipe = _dbSet.SingleAsync(r => r.RecipeId== id && r.IsDeleted != true);
             return recipe;
         }
         public async Task<ICollection<Recipe>> GetRecipesForUser(int id)
         {
-            var recipes= await _dbSet.Where(data=>data.UserId==id).ToListAsync();
+            var recipes= await _dbSet.Where(data=>data.UserId==id && data.IsDeleted!=true).ToListAsync();
 
             return recipes;
         }
         public async Task<ICollection<string>> GetAllRecipesNames()
         {
-            var recipesName = await _dbSet.Select(data=>data.Name).ToListAsync();
+            var recipesName = await _dbSet.Where(x=>x.IsDeleted != true).Select(data=>data.Name).ToListAsync();
             return recipesName;
         }
         public async Task<ICollection<Recipe>> GetRecipeSearch(string search)
         {
 
-            var recipeSearch = await _dbSet.Where(recipe=> recipe.Name.ToUpper().StartsWith(search.ToUpper())).ToListAsync();
+            var recipeSearch = await _dbSet.Where(recipe=> recipe.Name.ToUpper().StartsWith(search.ToUpper()) && recipe.IsDeleted != true).ToListAsync();
 
             return recipeSearch;
         }
@@ -40,19 +40,19 @@ namespace Hungry_Api.Repository
             
             if (!recipeName.IsNullOrEmpty() && categoryId!=null)
             {
-                 return await _dbSet.Where(r => r.Categories.Where(rc => rc.Category.CategoryId == categoryId).Any() && r.Name.ToUpper().StartsWith(recipeName.ToUpper())).ToListAsync();
+                 return await _dbSet.Where(r => r.Categories.Where(rc => rc.Category.CategoryId == categoryId).Any() && r.Name.ToUpper().StartsWith(recipeName.ToUpper()) && r.IsDeleted != true).ToListAsync();
             }
            else if(!recipeName.IsNullOrEmpty() && categoryId == null)
             {
-                return await _dbSet.Where(r=>r.Name.ToUpper().StartsWith(recipeName.ToUpper())).ToListAsync();
+                return await _dbSet.Where(r=>r.Name.ToUpper().StartsWith(recipeName.ToUpper()) && r.IsDeleted != true).ToListAsync();
             }
             else if(recipeName.IsNullOrEmpty() && categoryId == null)
             {
-                return await _dbSet.ToListAsync();
+                return await _dbSet.Where(data => data.IsDeleted!=true ).ToListAsync();
             }
             else
             {
-                return await _dbSet.Where(r => r.Categories.Where(rc => rc.Category.CategoryId == categoryId).Any()).ToListAsync();
+                return await _dbSet.Where(r => r.Categories.Where(rc => rc.Category.CategoryId == categoryId).Any() && r.IsDeleted != true).ToListAsync();
             }
                
 
@@ -65,7 +65,7 @@ namespace Hungry_Api.Repository
               ICollection<Recipe> recipes = new List<Recipe>();
             foreach(var follower in followed)
             {
-                var data = await _dbSet.Where(x => x.UserId == follower.CurrentUserId).Skip(number).Take(number + 15).ToListAsync();
+                var data = await _dbSet.Where(x => x.UserId == follower.CurrentUserId && x.IsDeleted != true).Skip(number).Take(number + 15).ToListAsync();
                 foreach(var recipe in data) {
 
                     recipes.Add(recipe);
@@ -79,8 +79,9 @@ namespace Hungry_Api.Repository
         public async Task<ICollection<Recipe>> GetLikedRecipesForUser(int userId)
         {
             var recipes = await _context.UserRecipe
-                  .Where(ur => ur.UserId == userId)
+                  .Where(ur => ur.UserId == userId )
                   .Select(ur => ur.Recipe)
+                  .Where(r=>r.IsDeleted!=true)
                   .ToListAsync();
 
             return recipes;
@@ -98,7 +99,7 @@ namespace Hungry_Api.Repository
             var recipes = await _context.Recipes
                 .Include(r => r.User)
                 .Include(r => r.Categories)
-                .Where(r => topRecipes.Contains(r.RecipeId))
+                .Where(r => topRecipes.Contains(r.RecipeId) && r.IsDeleted != true)
                 .ToListAsync();
 
             return recipes;
@@ -129,7 +130,7 @@ namespace Hungry_Api.Repository
 
             var recommendedRecipes = await _context.Recipes
                 .Where(r => r.Categories.Any(rc => userLikedCategories.Contains(rc.CategoryId))
-                            && !r.UserRecipes.Any(ur => ur.UserId == userId))
+                            && !r.UserRecipes.Any(ur => ur.UserId == userId) && r.IsDeleted != true)
                 .Select(r => new {
                     Recipe = r,
                     Score = r.RecipeReviews.Any() ? r.RecipeReviews.Average(rr => rr.Rating) : 0
@@ -152,6 +153,7 @@ namespace Hungry_Api.Repository
             })
             .OrderByDescending(r => r.AverageRating)
             .Select(r => r.Recipe)
+            .Where(r => r.IsDeleted != true)
             .Take(10)
             .ToListAsync();
             return topRatedRecipes;

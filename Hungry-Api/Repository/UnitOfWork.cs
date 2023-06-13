@@ -40,6 +40,12 @@ namespace Hungry_Api.Repository
 
         private IUserRecipeRepository? _userRecipeRepository;
         public IUserRecipeRepository UserRecipeRepository=> _userRecipeRepository??=new UserRecipeRepository(_context);
+        
+        private IMessageRepository? _messageRepository;
+        public IMessageRepository MessageRepository => _messageRepository ??= new MessageRepository(_context);
+
+        private ITicketRepository? _ticketRepository;
+        public ITicketRepository TicketRepository => _ticketRepository ??= new TicketRepository(_context);
 
         public UnitOfWork(HungryDbContext context)
         {

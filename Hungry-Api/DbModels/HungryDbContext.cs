@@ -11,6 +11,7 @@ namespace Hungry_Api.DbModels
 {
     public class HungryDbContext : DbContext
     {
+      
 
         public HungryDbContext(DbContextOptions<HungryDbContext> options, IConfiguration configuration) :base(options)
         {
@@ -32,6 +33,8 @@ namespace Hungry_Api.DbModels
         public DbSet<UserRecipe> UserRecipe { get; set; }
         public DbSet<UserFollower> UserFollower { get; set; }
         public DbSet<RecipeSteps> RecipeSteps { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<Ticket> Tickets { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -48,6 +51,14 @@ namespace Hungry_Api.DbModels
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Message>()
+                        .HasOne(e => e.Sender)
+                        .WithOne().OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Message>()
+                       .HasOne(e => e.Reciver)
+                       .WithOne().OnDelete(DeleteBehavior.Restrict);
+
+
             modelBuilder.Entity<UserFollower>().HasOne(a => a.CurrentUser)
                          .WithOne().OnDelete(DeleteBehavior.Restrict);
 
@@ -57,6 +68,18 @@ namespace Hungry_Api.DbModels
                 .IsUnique(false);
             modelBuilder.Entity<UserFollower>().HasIndex(a => a.FollowerId)
                 .IsUnique(false);
+
+            modelBuilder.Entity<Message>().HasOne(a => a.Sender)
+                         .WithOne().OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Message>().HasOne(a => a.Reciver)
+                        .WithOne().OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Message>().HasIndex(a => a.SenderId)
+                .IsUnique(false);
+            modelBuilder.Entity<Message>().HasIndex(a => a.ReciverId)
+                .IsUnique(false);
+
+
             modelBuilder.Entity<User>()
                 .HasIndex(u=>u.Username)
                 .IsUnique();

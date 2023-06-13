@@ -13,6 +13,8 @@
         IRecipeStepsRepository RecipeStepsRepository { get; }
         IUserFollowerRepository UserFollowerRepository { get; }
         IUserRecipeRepository UserRecipeRepository { get; }
+        IMessageRepository MessageRepository { get; }
+        ITicketRepository TicketRepository { get; }
         Task CompleteAsync();
     }
 }

@@ -16,6 +16,7 @@ namespace Hungry_Api.DbModels
         public string Difficulty { get; set; }
         public int? Serves { get; set; }
         public DateTime CreatedDate { get; set; } 
+        public bool IsDeleted { get; set; }
         public virtual User User { get; set; } = null;
         public ICollection<RecipeCategory> Categories { get;} =new List<RecipeCategory>();
         public ICollection<RecipeReview> RecipeReviews { get; } = new List<RecipeReview>();

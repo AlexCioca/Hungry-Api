@@ -1,26 +1,26 @@
 ﻿using AutoMapper;
-using Hungry_Api.AuthFolder;
 using Hungry_Api.AuthModels;
 using Hungry_Api.DbModels;
-using Hungry_Api.DTO;
 using Hungry_Api.Repository.Interface;
 using Hungry_Api.Services;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using System.Security.Cryptography;
 
 namespace Hungry_Api.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
     public class LoginController:ControllerBase
     {
-       
+        const int keySize = 64;
+        const int iterations = 350000;
+        HashAlgorithmName hashAlgorithm = HashAlgorithmName.SHA512;
+
         private IMapper Mapper { get; }
         private readonly IUnitOfWork _unitOfWork;
+        private PasswordHasher _passwordHasher;
         private AuthService _authService { get; }
         public LoginController( IMapper mapper, IUnitOfWork unitOfWork, AuthService authService)
         {
@@ -51,18 +51,18 @@ namespace Hungry_Api.Controllers
         [HttpPost("SignUp")]
         public async Task<IActionResult> SignUp([FromBody] InternalUserSignUp userLogin)
         {
-            var user = _unitOfWork.UserRepository.GetAllAsync().Result.FirstOrDefault(x => x.Email == userLogin.Email && x.AccountId!=null);
+            var user = _unitOfWork.UserRepository.GetAllAsync().Result.FirstOrDefault(x =>( x.Email == userLogin.Email && x.AccountId!=null) ||( x.Username == userLogin.Username && x.AccountId != null));
 
             if (user == null) {
 
-
+                
                 User currentUser = new User();
                 currentUser.Email = userLogin.Email;
                 currentUser.Role = "USER";
                 currentUser.Username = userLogin.Username;
                 currentUser.LastName = userLogin.LastName;
                 currentUser.FirstName = userLogin.FirstName;
-                currentUser.Password= userLogin.Password;
+                currentUser.Password= PasswordHasher.HashPassword(userLogin.Password); 
                 currentUser.Role = "USER";
                 currentUser.AccountId = "";
                 currentUser.Token = _authService.GenerateToken(currentUser);
@@ -77,9 +77,12 @@ namespace Hungry_Api.Controllers
         [HttpPost("InternalLogin")]
         public async Task<IActionResult> InternalLogin([FromBody] InternalUserLogin userLogin)
         {
-            var user = _unitOfWork.UserRepository.GetAllAsync().Result.FirstOrDefault(x => x.Email == userLogin.Email  && x.Password==userLogin.Password && x.AccountId=="");
-            
-            if(user != null)
+
+         
+            var user = _unitOfWork.UserRepository.GetAllAsync().Result.SingleOrDefault(x => x.Email == userLogin.Email);
+
+            var decr = PasswordHasher.verifyPassword(userLogin.Password, user.Password);
+            if (decr)
             {
 
                 user.Token = _authService.GenerateToken(user);
@@ -97,8 +100,7 @@ namespace Hungry_Api.Controllers
         {
             
             var currentUser =  _unitOfWork.UserRepository.GetAllAsync().Result.FirstOrDefault(x => x.Email == userLogin.Email);
-
-
+           
             if (currentUser != null)
             {
                 return currentUser;
@@ -119,6 +121,7 @@ namespace Hungry_Api.Controllers
             }
            
         }
+       
 
 
     }

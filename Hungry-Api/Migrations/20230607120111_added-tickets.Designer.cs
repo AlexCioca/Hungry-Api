@@ -4,6 +4,7 @@ using Hungry_Api.DbModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hungry_Api.Migrations
 {
     [DbContext(typeof(HungryDbContext))]
-    partial class HungryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230607120111_added-tickets")]
+    partial class addedtickets
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,6 +40,31 @@ namespace Hungry_Api.Migrations
                     b.HasKey("CategoryId");
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("Hungry_Api.DbModels.Connection", b =>
+                {
+                    b.Property<int>("ConnectionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ConnectionId"));
+
+                    b.Property<string>("SignalrId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ConnectionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Connections");
                 });
 
             modelBuilder.Entity("Hungry_Api.DbModels.Ingredient", b =>
@@ -143,9 +171,6 @@ namespace Hungry_Api.Migrations
                     b.Property<string>("Difficulty")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.Property<string>("MainPhoto")
                         .HasColumnType("nvarchar(max)");
@@ -390,6 +415,17 @@ namespace Hungry_Api.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserRecipe");
+                });
+
+            modelBuilder.Entity("Hungry_Api.DbModels.Connection", b =>
+                {
+                    b.HasOne("Hungry_Api.DbModels.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Hungry_Api.DbModels.Ingredient", b =>

@@ -513,7 +513,8 @@ namespace Hungry_Api.Controllers
             try
             {
                 var recipe = _unitOfWork.RecipeRepository.GetRecipeById(id);
-                await _unitOfWork.RecipeRepository.DeleteAsync(recipe.Result);
+                recipe.Result.IsDeleted = true;
+                await _unitOfWork.RecipeRepository.UpdateAsync(recipe.Result);
                 await _unitOfWork.CompleteAsync();
                 return Ok(recipe.Result);
             }

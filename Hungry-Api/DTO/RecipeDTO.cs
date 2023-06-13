@@ -13,5 +13,6 @@ namespace Hungry_Api.DTO
         public string Difficulty { get; set; }
         public int? Serves { get; set; }
         public DateTime CreatedDate { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

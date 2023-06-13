@@ -2,7 +2,11 @@
 {
     public class MessageDTO
     {
-        public string user { get; set; }
-        public string msgText { get; set; }
+        public int MessageId { get; set; }
+        public int SenderId { get; set; }
+        public int ReciverId { get; set; }
+        public string MessageText { get; set; }
+        public bool Seen { get; set; }
+        public DateTime TimeStamp { get; set; }
     }
 }

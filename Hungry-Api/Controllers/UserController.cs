@@ -207,5 +207,24 @@ namespace Hungry_Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("GetUserRole")]
+        public async Task<IActionResult> GetUserRole()
+        {
+
+            try
+            {
+                var bearer_token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                var handler = new JwtSecurityTokenHandler();
+                var jsonToken = handler.ReadToken(bearer_token) as JwtSecurityToken;
+                var userId = jsonToken.Claims.First(claim => claim.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role").Value;
+
+                return Ok(userId.ToString());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

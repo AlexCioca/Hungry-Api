@@ -8,6 +8,7 @@ namespace Hungry_Api.Repository.Interface
         Task<User> GetUserByToken(string token);
         Task<User> GetUserByUsername(string username);
         Task<ICollection<User>> GetPeopleByUsername(string username);
+     
 
 
     }
